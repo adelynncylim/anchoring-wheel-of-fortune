@@ -18,13 +18,6 @@
     .wheel-pointer {
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
     }
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 9999px;
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-4 sm:p-6 lg:p-8">
@@ -55,7 +48,7 @@
         <div id="target-banner" class="w-full bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 mb-6 flex items-center justify-between transition-all">
           <div class="flex items-center gap-3">
             <span class="flex h-3 w-3 relative">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span id="target-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
             <div>
@@ -70,7 +63,7 @@
 
         <!-- Wheel Canvas Area -->
         <div class="relative flex items-center justify-center my-2">
-          <!-- Pointer (Right side pointing inward) -->
+          <!-- Pointer -->
           <div class="absolute -right-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none wheel-pointer">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" class="text-rose-500 transform rotate-180 drop-shadow-lg">
               <polygon points="4,2 20,12 4,22" fill="currentColor"/>
@@ -82,14 +75,14 @@
 
           <!-- Center Spin Hub Button -->
           <button id="spinBtn" class="absolute z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-slate-950 to-slate-800 border-4 border-slate-700 hover:border-indigo-400 text-white font-bold text-base sm:text-lg shadow-xl flex flex-col items-center justify-center gap-0.5 transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group">
-            <span class="tracking-wider group-hover:text-indigo-300 transition-colors">SPIN</span>
-            <span class="text-[10px] text-slate-400 font-normal">CLICK</span>
+            <span id="spinBtnText" class="tracking-wider group-hover:text-indigo-300 transition-colors">SPIN</span>
+            <span id="spinBtnSub" class="text-[10px] text-slate-400 font-normal">CLICK</span>
           </button>
         </div>
 
         <!-- Actions -->
         <div class="flex items-center gap-3 mt-6 w-full max-w-sm">
-          <button id="autoAssignBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition-all flex items-center justify-center gap-2">
+          <button id="autoAssignBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             Auto Assign Remaining
           </button>
@@ -115,9 +108,7 @@
           </div>
 
           <!-- Roster Cards List -->
-          <div id="rosterList" class="flex flex-col gap-3">
-            <!-- Rendered dynamically by script -->
-          </div>
+          <div id="rosterList" class="flex flex-col gap-3"></div>
 
           <!-- Post-Assignment Action Bar -->
           <div class="mt-6 pt-5 border-t border-slate-800 flex flex-col gap-2.5">
@@ -135,9 +126,7 @@
         <!-- Remaining Team List -->
         <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4">
           <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">In the Pool</div>
-          <div id="poolTags" class="flex flex-wrap gap-2">
-            <!-- Pool tags inserted dynamically -->
-          </div>
+          <div id="poolTags" class="flex flex-wrap gap-2"></div>
         </div>
 
       </div>
@@ -150,7 +139,6 @@
   <canvas id="exportCanvas" width="1200" height="960" style="display: none;"></canvas>
 
   <script>
-    // --- Data Definitions ---
     const INITIAL_NAMES = ['Adelynn', 'Em', 'Ray', 'Bob', 'Maria'];
     const SECTIONS = [
       { id: 1, label: 'PART 1', title: 'HOOK — Capture Attention', icon: '🎣' },
@@ -160,22 +148,16 @@
       { id: 5, label: 'PART 5', title: 'Recap-CTA', icon: '🎯' }
     ];
 
-    const PALETTE = [
-      '#6366f1', // Indigo
-      '#ec4899', // Pink
-      '#10b981', // Emerald
-      '#f59e0b', // Amber
-      '#06b6d4', // Cyan
-    ];
+    const PALETTE = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4'];
 
-    // State
     let currentPool = [...INITIAL_NAMES];
-    let assignments = {}; // sectionId -> name
-    let currentStep = 0; // 0 to 4 index into SECTIONS
+    let assignments = {};
+    let currentStep = 0;
     let isSpinning = false;
-    let rotationAngle = 0; // in radians
+    let rotationAngle = 0;
+    let autoAssignTimer = null;
 
-    // Audio Context (Web Audio procedural clicks)
+    // Web Audio Sound Engine
     let audioCtx = null;
     function playTick() {
       try {
@@ -225,7 +207,6 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (currentPool.length === 0) {
-        // Empty finished state
         ctx.save();
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
@@ -251,7 +232,6 @@
         const start = rotationAngle + i * sliceAngle;
         const end = start + sliceAngle;
 
-        // Slice shape
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, start, end);
@@ -262,7 +242,6 @@
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        // Label
         ctx.save();
         ctx.translate(centerX, centerY);
         ctx.rotate(start + sliceAngle / 2);
@@ -276,7 +255,6 @@
         ctx.restore();
       }
 
-      // Outer rim
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.strokeStyle = '#334155';
@@ -284,7 +262,6 @@
       ctx.stroke();
     }
 
-    // Render HTML Roster Cards
     function renderRoster() {
       const rosterList = document.getElementById('rosterList');
       rosterList.innerHTML = '';
@@ -318,7 +295,7 @@
                    </span>`
                 : isCurrent
                   ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-medium animate-pulse">
-                       Next up
+                       ${currentPool.length === 1 ? 'Auto-Assigning...' : 'Next up'}
                      </span>`
                   : `<span class="text-xs text-slate-600 font-medium">Pending</span>`
             }
@@ -327,7 +304,6 @@
         rosterList.appendChild(card);
       });
 
-      // Update counters & target status
       const assignedCount = Object.keys(assignments).length;
       document.getElementById('assigned-badge').textContent = `${assignedCount} / 5 Assigned`;
 
@@ -337,9 +313,11 @@
       } else {
         document.getElementById('target-title').textContent = 'All 5 Sections Successfully Assigned!';
         document.getElementById('step-counter').textContent = 'Completed';
+        const ping = document.getElementById('target-ping');
+        if (ping) ping.classList.remove('animate-ping');
       }
 
-      // Update remaining pool tags
+      // Remaining pool
       const poolContainer = document.getElementById('poolTags');
       poolContainer.innerHTML = '';
       if (currentPool.length === 0) {
@@ -353,52 +331,58 @@
         });
       }
 
-      // Buttons
+      // Controls State
       const isComplete = assignedCount === 5;
+      const isAutoPending = currentPool.length === 1 && !isComplete;
+      
       document.getElementById('downloadBtn').disabled = !isComplete;
       document.getElementById('copyBtn').disabled = !isComplete;
-      document.getElementById('spinBtn').disabled = isSpinning || isComplete;
-      document.getElementById('autoAssignBtn').disabled = isSpinning || isComplete;
+      document.getElementById('spinBtn').disabled = isSpinning || isComplete || isAutoPending;
+      document.getElementById('autoAssignBtn').disabled = isSpinning || isComplete || isAutoPending;
+
+      if (isAutoPending) {
+        document.getElementById('spinBtnText').textContent = 'AUTO';
+        document.getElementById('spinBtnSub').textContent = 'LAST ROLE';
+      } else if (isComplete) {
+        document.getElementById('spinBtnText').textContent = 'DONE';
+        document.getElementById('spinBtnSub').textContent = 'ALL SET';
+      } else {
+        document.getElementById('spinBtnText').textContent = 'SPIN';
+        document.getElementById('spinBtnSub').textContent = 'CLICK';
+      }
     }
 
-    // Wheel Spin Engine
-    function spinWheel() {
+    // Spin Engine
+    function spinWheel(forcedTargetIndex = null, onCompleteCallback = null) {
       if (isSpinning || currentPool.length === 0 || currentStep >= 5) return;
 
       isSpinning = true;
       document.getElementById('spinBtn').disabled = true;
 
-      // Random target slice selection
       const numSlices = currentPool.length;
-      const targetIndex = Math.floor(Math.random() * numSlices);
+      const targetIndex = (forcedTargetIndex !== null) ? forcedTargetIndex : Math.floor(Math.random() * numSlices);
       const sliceAngle = (2 * Math.PI) / numSlices;
 
-      // Pointer is on the right side: angle 0 radians
-      // Slice i spans from: [rotation + i * sliceAngle] to [rotation + (i + 1) * sliceAngle]
-      // We want pointer angle (0) to land inside target slice:
-      // (rotation + targetIndex * sliceAngle + sliceAngle / 2) = 0 (mod 2PI)
       const targetMiddle = targetIndex * sliceAngle + sliceAngle / 2;
-      const extraRounds = (5 + Math.floor(Math.random() * 3)) * (2 * Math.PI); // 5-7 full spins
+      const extraRounds = (4 + Math.floor(Math.random() * 2)) * (2 * Math.PI);
 
       const currentMod = rotationAngle % (2 * Math.PI);
       const desiredEndAngle = rotationAngle + (2 * Math.PI - (targetMiddle % (2 * Math.PI))) - currentMod + extraRounds;
 
       const startAngle = rotationAngle;
       const totalDelta = desiredEndAngle - startAngle;
-      const duration = 4000; // ms
+      const duration = 3200;
       const startTime = performance.now();
       let lastTickAngle = startAngle;
 
       function animate(time) {
         const elapsed = time - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // Ease out cubic
         const easeOut = 1 - Math.pow(1 - progress, 3);
 
         rotationAngle = startAngle + totalDelta * easeOut;
 
-        // Sound tick on passing slice boundaries
-        if (Math.abs(rotationAngle - lastTickAngle) >= sliceAngle * 0.8) {
+        if (Math.abs(rotationAngle - lastTickAngle) >= sliceAngle * 0.75) {
           playTick();
           lastTickAngle = rotationAngle;
         }
@@ -410,13 +394,13 @@
         } else {
           isSpinning = false;
           finalizeAssignment(targetIndex);
+          if (onCompleteCallback) onCompleteCallback();
         }
       }
 
       requestAnimationFrame(animate);
     }
 
-    // Handle Assignment Completion & Auto-Assignment of the Last Person
     function finalizeAssignment(assignedIndex) {
       const winner = currentPool[assignedIndex];
       const targetSection = SECTIONS[currentStep];
@@ -426,50 +410,29 @@
       currentStep++;
 
       playFanfare();
+
+      const isFinalStep = currentStep === 5;
       confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.7 }
+        particleCount: isFinalStep ? 160 : 50,
+        spread: isFinalStep ? 100 : 60,
+        origin: { y: isFinalStep ? 0.5 : 0.7 }
       });
 
       renderRoster();
       drawWheel();
 
-      // AUTO-ASSIGN LAST PERSON LOGIC:
-      // If exactly 1 person remains and Part 5 is pending, automatically assign them without waiting for spin
+      // AUTO ASSIGN TRIGGER:
+      // If exactly 1 person remains and Part 5 is pending, automatically trigger the spin for them
       if (currentPool.length === 1 && currentStep === 4) {
-        setTimeout(() => {
-          const lastWinner = currentPool[0];
-          const finalSection = SECTIONS[4];
-
-          assignments[finalSection.id] = lastWinner;
-          currentPool = [];
-          currentStep = 5;
-
-          renderRoster();
-          drawWheel();
-
-          playFanfare();
-          // Grand finale celebration burst
-          confetti({
-            particleCount: 150,
-            spread: 90,
-            origin: { y: 0.5 }
-          });
-        }, 1100);
-      } else if (currentStep === 5) {
-        // Complete
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: { y: 0.5 }
-        });
+        autoAssignTimer = setTimeout(() => {
+          spinWheel(0);
+        }, 1200);
       }
     }
 
-    // Auto Assign All Remaining Instantly
     function autoAssignAll() {
       if (isSpinning || currentStep >= 5) return;
+      if (autoAssignTimer) clearTimeout(autoAssignTimer);
 
       while (currentPool.length > 0 && currentStep < 5) {
         const randIndex = Math.floor(Math.random() * currentPool.length);
@@ -483,14 +446,14 @@
       drawWheel();
       playFanfare();
       confetti({
-        particleCount: 120,
+        particleCount: 160,
         spread: 90,
         origin: { y: 0.5 }
       });
     }
 
-    // Reset Function
     function resetAll() {
+      if (autoAssignTimer) clearTimeout(autoAssignTimer);
       currentPool = [...INITIAL_NAMES];
       assignments = {};
       currentStep = 0;
@@ -500,41 +463,35 @@
       drawWheel();
     }
 
-    // Dedicated HTML5 Canvas Export Generator (Solves DOM capture distortion)
+    // High-Resolution Image Export Canvas
     function generateAndDownloadImage() {
       const expCanvas = document.getElementById('exportCanvas');
       const eCtx = expCanvas.getContext('2d');
       const w = expCanvas.width;
       const h = expCanvas.height;
 
-      // Background Gradient
       const grad = eCtx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#0b0f19');
       grad.addColorStop(1, '#111827');
       eCtx.fillStyle = grad;
       eCtx.fillRect(0, 0, w, h);
 
-      // Border outline
       eCtx.strokeStyle = '#1e293b';
       eCtx.lineWidth = 12;
       eCtx.strokeRect(6, 6, w - 12, h - 12);
 
-      // Header Tag
       eCtx.fillStyle = '#6366f1';
       eCtx.font = 'bold 20px Plus Jakarta Sans, sans-serif';
       eCtx.fillText('OFFICIAL DRAW RESULTS', 80, 90);
 
-      // Title
       eCtx.fillStyle = '#ffffff';
       eCtx.font = 'bold 44px Plus Jakarta Sans, sans-serif';
       eCtx.fillText('Presentation Section Roster', 80, 145);
 
-      // Subtitle
       eCtx.fillStyle = '#94a3b8';
       eCtx.font = '22px Plus Jakarta Sans, sans-serif';
       eCtx.fillText('5-Part Structured Delivery Flow', 80, 185);
 
-      // Status Pill Right
       eCtx.fillStyle = '#10b98120';
       eCtx.beginPath();
       eCtx.roundRect(w - 290, 100, 210, 48, 24);
@@ -549,7 +506,6 @@
       eCtx.fillText('✓ 5 / 5 Assigned', w - 185, 131);
       eCtx.textAlign = 'left';
 
-      // 5 Rows
       const rowStartY = 240;
       const rowHeight = 110;
       const rowGap = 16;
@@ -558,7 +514,6 @@
         const y = rowStartY + i * (rowHeight + rowGap);
         const assigned = assignments[sec.id] || 'Unassigned';
 
-        // Row Box
         eCtx.fillStyle = '#1e293b70';
         eCtx.beginPath();
         eCtx.roundRect(80, y, w - 160, rowHeight, 20);
@@ -567,7 +522,6 @@
         eCtx.lineWidth = 2;
         eCtx.stroke();
 
-        // Icon Box
         eCtx.fillStyle = '#33415580';
         eCtx.beginPath();
         eCtx.roundRect(104, y + 20, 70, 70, 16);
@@ -578,7 +532,6 @@
         eCtx.textBaseline = 'middle';
         eCtx.fillText(sec.icon, 139, y + 55);
 
-        // Section Title & Label
         eCtx.textAlign = 'left';
         eCtx.textBaseline = 'alphabetic';
         eCtx.fillStyle = '#818cf8';
@@ -589,7 +542,6 @@
         eCtx.font = 'bold 26px Plus Jakarta Sans, sans-serif';
         eCtx.fillText(sec.title, 196, y + 80);
 
-        // Assignee Pill Badge (Right side)
         const badgeW = 240;
         const badgeH = 58;
         const badgeX = w - 80 - badgeW - 24;
@@ -608,21 +560,18 @@
         eCtx.textAlign = 'left';
       });
 
-      // Footer
       eCtx.fillStyle = '#64748b';
       eCtx.font = '18px Plus Jakarta Sans, sans-serif';
       eCtx.textBaseline = 'alphabetic';
       const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
       eCtx.fillText(`Generated on ${dateStr} • Random Presentation Assignment Wheel`, 80, h - 45);
 
-      // Trigger Download
       const link = document.createElement('a');
       link.download = `presentation_roster_${new Date().toISOString().slice(0,10)}.png`;
       link.href = expCanvas.toDataURL('image/png');
       link.click();
     }
 
-    // Copy to Clipboard
     function copyToClipboard() {
       const lines = SECTIONS.map(s => `${s.label} (${s.title}): ${assignments[s.id] || 'TBD'}`);
       const text = `📋 Presentation Roster Assignments:\n\n` + lines.join('\n');
@@ -634,14 +583,12 @@
       });
     }
 
-    // Event Listeners
-    document.getElementById('spinBtn').addEventListener('click', spinWheel);
+    document.getElementById('spinBtn').addEventListener('click', () => spinWheel());
     document.getElementById('autoAssignBtn').addEventListener('click', autoAssignAll);
     document.getElementById('resetBtn').addEventListener('click', resetAll);
     document.getElementById('downloadBtn').addEventListener('click', generateAndDownloadImage);
     document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
 
-    // Initial setup
     renderRoster();
     drawWheel();
   </script>
