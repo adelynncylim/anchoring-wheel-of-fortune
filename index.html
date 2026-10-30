@@ -14,43 +14,43 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b0f19;
+      background-color: #080c16;
       color: #f1f5f9;
     }
-    .wheel-glow {
-      box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.25);
+    .wheel-container-glow {
+      box-shadow: 0 0 70px -15px rgba(67, 56, 202, 0.25);
     }
   </style>
 </head>
-<body class="min-h-screen bg-[#07090e] text-slate-100 p-4 sm:p-6 lg:p-8">
+<body class="min-h-screen bg-[#080c16] text-slate-100 p-4 sm:p-6 lg:p-8 select-none">
 
   <div class="max-w-7xl mx-auto flex flex-col gap-6">
 
     <!-- Top Navigation / Header Bar -->
-    <header class="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-2">
       <div class="flex items-center gap-3">
-        <!-- Purple gradient square icon -->
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-black text-lg">
+        <!-- Rounded purple-to-pink gradient app icon -->
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#ec4899] flex items-center justify-center shadow-lg shadow-indigo-500/25 text-white text-lg">
           <i class="fa-solid fa-arrows-spin"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">Presentation Randomizer</h1>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1e1b4b] text-[#a5b4fc] border border-[#3730a3]">
               5-Part Pitch
             </span>
           </div>
-          <p class="text-xs text-slate-400">Step-by-step role distribution with lucky wheel mechanics</p>
+          <p class="text-xs text-slate-400 mt-0.5">Step-by-step role distribution with lucky wheel mechanics</p>
         </div>
       </div>
 
       <!-- Header Action Buttons -->
       <div class="flex items-center gap-2.5">
-        <button id="soundToggleBtn" class="px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 transition flex items-center gap-2">
+        <button id="soundToggleBtn" class="px-3.5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-800 text-xs font-semibold text-slate-300 transition flex items-center gap-2">
           <i id="soundIcon" class="fa-solid fa-volume-high text-indigo-400"></i>
           <span id="soundLabel">Sound On</span>
         </button>
-        <button id="resetAllBtn" class="px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-rose-950/30 hover:border-rose-900/50 border border-slate-800 text-xs font-semibold text-slate-400 hover:text-rose-300 transition flex items-center gap-1.5">
+        <button id="resetAllBtn" class="px-3.5 py-2 rounded-xl bg-[#0f172a] hover:bg-rose-950/30 hover:border-rose-900/50 border border-slate-800 text-xs font-semibold text-slate-400 hover:text-rose-300 transition flex items-center gap-1.5">
           <i class="fa-solid fa-rotate-right text-xs"></i>
           <span>Reset All</span>
         </button>
@@ -60,17 +60,17 @@
     <!-- Main Workspace Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-      <!-- LEFT COLUMN: Round Banner, Wheel, Spin Controls, Pool -->
+      <!-- LEFT COLUMN: Round Banner, Wheel, Spin Controls, Pool Tray -->
       <div class="lg:col-span-7 flex flex-col gap-5">
         
         <!-- Current Round Card -->
-        <div class="bg-[#0f1422] border border-slate-800/80 rounded-2xl p-5 relative overflow-hidden shadow-xl">
-          <div class="flex flex-wrap items-start justify-between gap-3 mb-2">
-            <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-indigo-400">
-              <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+        <div class="bg-[#0e1424] border border-[#1e293b]/90 rounded-2xl p-5 relative shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-indigo-400">
+              <span class="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]"></span>
               <span id="roundCounterText">CURRENT ROUND ( 1 OF 5 )</span>
             </div>
-            <div id="statusPill" class="px-3 py-1 rounded-lg text-xs font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-300 flex items-center gap-1.5">
+            <div id="statusPill" class="px-3 py-1 rounded-xl text-xs font-bold bg-[#291e0a] border border-[#854d0e]/60 text-[#fde047] flex items-center gap-1.5">
               <span>⌛</span>
               <span id="statusPillText">Awaiting Spin</span>
             </div>
@@ -78,52 +78,51 @@
           <h2 id="roundTitle" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
             HOOK — Capture Attention
           </h2>
-          <p id="roundDesc" class="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
+          <p id="roundDesc" class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
             Grab the audience right away with a striking hook, anecdote, curiosity gap, or punchy question.
           </p>
         </div>
 
-        <!-- Wheel Canvas Area with Top Pointer -->
-        <div class="flex flex-col items-center justify-center relative py-2">
+        <!-- Wheel Canvas Area with Top Pointer at 12 o'clock -->
+        <div class="flex flex-col items-center justify-center relative py-1">
           
-          <!-- Outer circle backdrop glow -->
-          <div class="relative flex items-center justify-center wheel-glow rounded-full p-2 bg-[#0a0d16]/80 border border-slate-800/80">
+          <div class="relative flex items-center justify-center wheel-container-glow rounded-full p-2 bg-[#090d18] border border-slate-800/80">
             
             <!-- Top Pointer at 12 o'clock pointing down -->
-            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30 drop-shadow-lg">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30 drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] pointer-events-none">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-                <polygon points="12,22 4,6 20,6" fill="#F59E0B" stroke="#0B0F19" stroke-width="2"/>
+                <polygon points="12,22 4,6 20,6" fill="#F59E0B" stroke="#080c16" stroke-width="2" stroke-linejoin="round"/>
               </svg>
             </div>
 
             <!-- Canvas Element -->
-            <canvas id="wheelCanvas" width="460" height="460" class="max-w-full h-auto rounded-full"></canvas>
+            <canvas id="wheelCanvas" width="460" height="460" class="max-w-full h-auto rounded-full bg-[#080c16]"></canvas>
 
             <!-- Center Hub Spin Button -->
-            <button id="centerSpinBtn" class="absolute z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0d121f] border-4 border-[#eab308] hover:border-amber-300 text-amber-400 hover:text-white font-black text-sm shadow-2xl flex flex-col items-center justify-center gap-0.5 transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
-              <span class="tracking-wider text-xs sm:text-sm">SPIN</span>
-              <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
+            <button id="centerSpinBtn" class="absolute z-20 w-22 h-22 sm:w-24 sm:h-24 rounded-full bg-[#0b0f19] border-4 border-[#f59e0b] hover:border-amber-300 text-amber-400 hover:text-white font-black shadow-2xl flex flex-col items-center justify-center gap-0.5 transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
+              <span id="centerBtnLabel" class="tracking-wider text-xs sm:text-sm font-black">SPIN</span>
+              <i id="centerBtnIcon" class="fa-solid fa-play text-[10px] ml-0.5"></i>
             </button>
           </div>
 
         </div>
 
-        <!-- Action Buttons (Large yellow button + secondary auto assign) -->
+        <!-- Action Buttons (Large yellow button + Auto Assign button) -->
         <div class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3">
-          <button id="primarySpinBtn" class="w-full sm:w-72 py-3.5 px-6 rounded-2xl bg-[#f59e0b] hover:bg-[#d97706] active:scale-[0.99] text-slate-950 font-black text-sm sm:text-base tracking-wide shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-arrows-rotate text-sm"></i>
+          <button id="primarySpinBtn" class="w-full sm:w-80 py-3.5 px-6 rounded-2xl bg-[#fbbf24] hover:bg-[#f59e0b] active:scale-[0.99] text-slate-950 font-black text-sm sm:text-base tracking-wide shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+            <i id="primaryBtnIcon" class="fa-solid fa-arrows-rotate text-sm"></i>
             <span id="primarySpinBtnText">Spin for Part 1</span>
           </button>
 
-          <button id="autoAssignAllBtn" class="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 active:scale-[0.99] border border-slate-800 text-xs font-bold text-slate-300 transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button id="autoAssignAllBtn" class="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.99] border border-slate-800 text-xs font-bold text-slate-300 transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
             <i class="fa-solid fa-bolt text-amber-400"></i>
             <span>Auto Assign All</span>
           </button>
         </div>
 
-        <!-- Remaining in Wheel Pool -->
-        <div class="bg-[#0f1422]/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col items-center gap-2.5">
-          <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Remaining in Wheel Pool</span>
+        <!-- Remaining in Wheel Pool Tray -->
+        <div class="bg-[#0e1424]/70 border border-[#1e293b]/80 rounded-2xl p-4 flex flex-col items-center gap-2.5">
+          <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">REMAINING IN WHEEL POOL</span>
           <div id="poolPillsContainer" class="flex flex-wrap items-center justify-center gap-2">
             <!-- Rendered dynamically -->
           </div>
@@ -131,11 +130,11 @@
 
       </div>
 
-      <!-- RIGHT COLUMN: Presentation Roster Cards & How it works -->
+      <!-- RIGHT COLUMN: Presentation Roster Cards & How It Works -->
       <div class="lg:col-span-5 flex flex-col gap-4">
         
         <!-- Presentation Roster Box -->
-        <div class="bg-[#0f1422] border border-slate-800/80 rounded-2xl p-5 shadow-2xl">
+        <div class="bg-[#0e1424] border border-[#1e293b]/90 rounded-2xl p-5 shadow-2xl">
           <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
             <div>
               <div class="flex items-center gap-2">
@@ -144,7 +143,7 @@
               </div>
               <p class="text-xs text-slate-400 mt-0.5">5-Part Structured Delivery Flow</p>
             </div>
-            <span id="assignedCountBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-900 border border-slate-700/80 text-slate-300">
+            <span id="assignedCountBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-[#111827] border border-slate-700/80 text-slate-300">
               0 / 5 Assigned
             </span>
           </div>
@@ -160,7 +159,7 @@
               <i class="fa-solid fa-download"></i>
               <span>Download Outcome Image</span>
             </button>
-            <button id="copyRosterBtn" disabled class="py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-800 text-xs font-semibold text-slate-300 transition flex items-center justify-center gap-1.5">
+            <button id="copyRosterBtn" disabled class="py-2.5 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] disabled:opacity-40 disabled:cursor-not-allowed border border-slate-800 text-xs font-semibold text-slate-300 transition flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-copy text-indigo-400"></i>
               <span id="copyBtnText">Copy</span>
             </button>
@@ -168,12 +167,12 @@
         </div>
 
         <!-- How It Works Guidance Card -->
-        <div class="bg-[#0c101b] border border-slate-800/60 rounded-2xl p-4 flex items-start gap-3 text-xs leading-relaxed text-slate-400">
-          <div class="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <div class="bg-[#0a0f1d] border border-slate-800/70 rounded-2xl p-4 flex items-start gap-3 text-xs leading-relaxed text-slate-400">
+          <div class="w-7 h-7 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
             <i class="fa-regular fa-lightbulb"></i>
           </div>
           <div>
-            <span class="font-bold text-slate-300">How it works:</span>
+            <span class="font-bold text-slate-300">How it works:</span><br/>
             Each spin matches one remaining speaker to the current stage of your talk. Once landed, that person is drafted into the roster and removed from the wheel until all 5 parts are secured!
           </div>
         </div>
@@ -184,13 +183,12 @@
 
   </div>
 
-  <!-- ROUND WINNER ANNOUNCEMENT POPUP MODAL (Appears after each spin) -->
+  <!-- ROUND WINNER ANNOUNCEMENT POPUP MODAL -->
   <div id="roundModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-[#0f1422] border border-slate-700/80 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative flex flex-col items-center text-center transform scale-95 transition-transform duration-300" id="roundModalCard">
+    <div class="bg-[#0e1424] border border-slate-700/80 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative flex flex-col items-center text-center transform scale-95 transition-transform duration-300" id="roundModalCard">
       
-      <!-- Top Selected Speaker Badge -->
       <div id="roundModalAvatar" class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl text-white font-extrabold shadow-lg mb-3">
-        <!-- Initials or User icon -->
+        <!-- Initials -->
       </div>
 
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 mb-2">
@@ -198,13 +196,12 @@
       </div>
 
       <h3 class="text-2xl font-black text-white">
-        🎉 Selected: <span id="roundModalName" class="text-amber-400">Speaker</span>!
+        Selected: <span id="roundModalName" class="text-amber-400">Speaker</span>!
       </h3>
 
-      <!-- Section Details Card inside modal -->
-      <div class="w-full bg-[#080c14] border border-slate-800 rounded-2xl p-4 my-4 text-left flex flex-col gap-2">
+      <div class="w-full bg-[#080d1a] border border-slate-800 rounded-2xl p-4 my-4 text-left flex flex-col gap-2">
         <div class="flex items-center gap-2.5">
-          <div id="roundModalIcon" class="w-9 h-9 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-base text-indigo-400">
+          <div id="roundModalIcon" class="w-9 h-9 rounded-xl bg-slate-800/90 border border-slate-700 flex items-center justify-center text-base text-indigo-400">
             <i class="fa-solid fa-magnet"></i>
           </div>
           <div>
@@ -220,8 +217,7 @@
         </div>
       </div>
 
-      <!-- Action Button -->
-      <button id="continueRoundBtn" class="w-full py-3.5 px-6 rounded-xl bg-[#f59e0b] hover:bg-[#d97706] text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
+      <button id="continueRoundBtn" class="w-full py-3.5 px-6 rounded-xl bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-950 font-black text-xs tracking-wider shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
         <span id="continueBtnText">Continue to Next Part</span>
         <i class="fa-solid fa-arrow-right text-xs"></i>
       </button>
@@ -231,9 +227,8 @@
 
   <!-- CELEBRATION / VICTORY MODAL POPUP -->
   <div id="victoryModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-[#0f1422] border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center transform scale-95 transition-transform duration-300" id="victoryModalCard">
+    <div class="bg-[#0e1424] border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center transform scale-95 transition-transform duration-300" id="victoryModalCard">
       
-      <!-- Close button -->
       <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800/60 flex items-center justify-center">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -245,18 +240,16 @@
       <h3 class="text-2xl font-black text-white">Full Pitch Team Assembled!</h3>
       <p class="text-xs text-slate-400 mt-1 mb-5">All 5 parts of your presentation have been successfully distributed.</p>
 
-      <!-- Modal Summary List -->
       <div id="modalSummaryList" class="w-full flex flex-col gap-2 mb-6 text-left">
         <!-- Rendered by JS -->
       </div>
 
-      <!-- Modal Action Buttons -->
       <div class="w-full flex flex-col sm:flex-row gap-2.5">
         <button id="modalDownloadBtn" class="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
           <i class="fa-solid fa-download"></i>
           <span>Download Outcome (PNG)</span>
         </button>
-        <button id="modalCopyBtn" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center justify-center gap-2 transition">
+        <button id="modalCopyBtn" class="py-3 px-4 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-white font-semibold text-xs flex items-center justify-center gap-2 transition">
           <i class="fa-solid fa-copy"></i>
           <span id="modalCopyBtnText">Copy Roster</span>
         </button>
@@ -269,13 +262,13 @@
   <canvas id="exportCanvas" width="1200" height="960" style="display: none;"></canvas>
 
   <script>
-    // --- Master Data Definition ---
+    // Exact candidates & palette matching reference screenshot
     const CANDIDATES = [
-      { name: 'Adelynn', color: '#4F46E5', darkBg: '#312E81' }, // Royal Blue
-      { name: 'Em',      color: '#EC4899', darkBg: '#831843' }, // Magenta / Pink
-      { name: 'Ray',     color: '#06B6D4', darkBg: '#164E63' }, // Cyan / Teal
-      { name: 'Bob',     color: '#F59E0B', darkBg: '#78350F' }, // Orange / Amber
-      { name: 'Maria',   color: '#10B981', darkBg: '#064E3B' }  // Emerald Green
+      { name: 'Bob',     color: '#F59E0B' }, // Amber / Orange
+      { name: 'Maria',   color: '#10B981' }, // Emerald Green
+      { name: 'Adelynn', color: '#4338CA' }, // Royal Blue
+      { name: 'Em',      color: '#EC4899' }, // Pink
+      { name: 'Ray',     color: '#06B6D4' }  // Cyan
     ];
 
     const SECTIONS = [
@@ -284,64 +277,81 @@
         part: 'PART 1',
         title: 'HOOK — Capture Attention',
         desc: 'Grab the audience right away with a striking hook, anecdote, curiosity gap, or punchy question.',
-        icon: 'fa-magnet',
-        defaultColor: '#6366F1'
+        icon: 'fa-magnet'
       },
       {
         id: 2,
         part: 'PART 2',
         title: 'WHY — WIIFM',
         desc: 'What’s In It For Me? Establish clear stakes, urgency, and why the room should care right now.',
-        icon: 'fa-heart-pulse',
-        defaultColor: '#EC4899'
+        icon: 'fa-heart-pulse'
       },
       {
         id: 3,
         part: 'PART 3',
         title: 'WHAT IS IT (Anchoring)?',
         desc: 'Define the core idea cleanly and drop your strategic anchor before unfolding details.',
-        icon: 'fa-anchor',
-        defaultColor: '#F59E0B'
+        icon: 'fa-anchor'
       },
       {
         id: 4,
         part: 'PART 4',
         title: 'HOW — Steps',
         desc: 'Walk through concrete execution steps, architecture, timeline, and actionable mechanics.',
-        icon: 'fa-stairs',
-        defaultColor: '#10B981'
+        icon: 'fa-stairs'
       },
       {
         id: 5,
         part: 'PART 5',
         title: 'Recap-CTA',
         desc: 'Summarize the big takeaway and deliver an unmistakable call-to-action to finish strong.',
-        icon: 'fa-flag-checkered',
-        defaultColor: '#06B6D4'
+        icon: 'fa-flag-checkered'
       }
     ];
 
-    // --- State Variables ---
+    // State
     let pool = [...CANDIDATES];
-    let assignments = {}; // sectionId -> candidate object
+    let assignments = {};
     let isSpinning = false;
-    let rotationAngle = 0; // in radians
+    let rotationAngle = 0;
     let soundEnabled = true;
-    let pendingAutoAssign = false;
 
-    // --- Web Audio Engine (Tick & Fanfare) ---
+    // --- Mobile-Ready Web Audio Engine ---
     let audioCtx = null;
-    function playTickSound() {
-      if (!soundEnabled) return;
+
+    function initAudio() {
       try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const buffer = audioCtx.createBuffer(1, 1, 22050);
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioCtx.destination);
+        source.start(0);
+      } catch (e) {}
+    }
+
+    ['touchstart', 'touchend', 'pointerdown', 'click'].forEach(evt => {
+      document.addEventListener(evt, function unlock() {
+        initAudio();
+        document.removeEventListener(evt, unlock);
+      }, { once: true, passive: true });
+    });
+
+    function playTick() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(620, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -350,27 +360,30 @@
       } catch (e) {}
     }
 
-    function playFanfareSound() {
+    function playFanfare(isFinalReveal = false) {
       if (!soundEnabled) return;
+      initAudio();
       try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
         const now = audioCtx.currentTime;
-        [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const notes = isFinalReveal
+          ? [440, 554.37, 659.25, 880, 1108.73, 1318.51] // Triumphant arpeggio
+          : [440, 554.37, 659.25, 880];
+
+        notes.forEach((freq, idx) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-          gain.gain.setValueAtTime(0.18, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+          osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+          gain.gain.setValueAtTime(0.2, now + idx * 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + (isFinalReveal ? 0.45 : 0.35));
           osc.connect(gain);
           gain.connect(audioCtx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.35);
+          osc.start(now + idx * 0.09);
+          osc.stop(now + idx * 0.09 + (isFinalReveal ? 0.45 : 0.35));
         });
       } catch (e) {}
     }
 
-    // --- Canvas Wheel Rendering (faithful to screenshot) ---
+    // --- Canvas Wheel Setup ---
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const centerX = canvas.width / 2;
@@ -380,26 +393,25 @@
     function drawWheel() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Outer rim background
+      // Outer rim ring
       ctx.beginPath();
       ctx.arc(centerX, centerY, wheelRadius + 6, 0, 2 * Math.PI);
-      ctx.fillStyle = '#0f1422';
+      ctx.fillStyle = '#0e1424';
       ctx.fill();
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth = 4;
       ctx.stroke();
 
       if (pool.length === 0) {
-        // Complete state
         ctx.beginPath();
         ctx.arc(centerX, centerY, wheelRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = '#111827';
+        ctx.fillStyle = '#0f172a';
         ctx.fill();
-        ctx.strokeStyle = '#374151';
+        ctx.strokeStyle = '#334155';
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        ctx.fillStyle = '#9ca3af';
+        ctx.fillStyle = '#94a3b8';
         ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -414,14 +426,14 @@
         const start = rotationAngle + i * sliceAngle;
         const end = start + sliceAngle;
 
-        // Draw slice wedge
+        // Slice wedge
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, wheelRadius, start, end);
         ctx.closePath();
         ctx.fillStyle = pool[i].color;
         ctx.fill();
-        ctx.strokeStyle = '#07090e';
+        ctx.strokeStyle = '#080c16';
         ctx.lineWidth = 4;
         ctx.stroke();
 
@@ -435,7 +447,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fill();
 
-        // Candidate Name text centered along radius
+        // Candidate Name text centered along slice radius
         ctx.save();
         ctx.translate(centerX, centerY);
         ctx.rotate(midAngle);
@@ -443,9 +455,9 @@
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-        ctx.shadowColor = 'rgba(0,0,0,0.55)';
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
         ctx.shadowBlur = 6;
-        ctx.fillText(pool[i].name, wheelRadius - 32, 0);
+        ctx.fillText(pool[i].name, wheelRadius - 34, 0);
         ctx.restore();
       }
 
@@ -457,57 +469,68 @@
       ctx.stroke();
     }
 
-    // --- Synchronize UI Elements ---
+    // --- UI Synchronizer ---
     function updateUI() {
       const assignedCount = Object.keys(assignments).length;
       const isComplete = assignedCount === 5;
       const currentSectionIndex = Math.min(assignedCount, 4);
       const currentSection = SECTIONS[currentSectionIndex];
 
-      // Top round card updates
       if (!isComplete) {
         document.getElementById('roundCounterText').textContent = `CURRENT ROUND ( ${assignedCount + 1} OF 5 )`;
         document.getElementById('roundTitle').textContent = currentSection.title;
         document.getElementById('roundDesc').textContent = currentSection.desc;
-        document.getElementById('statusPillText').textContent = isSpinning ? 'Spinning...' : 'Awaiting Spin';
-        document.getElementById('primarySpinBtnText').textContent = `Spin for ${currentSection.part}`;
+
+        if (pool.length === 1) {
+          document.getElementById('statusPillText').textContent = 'Final Person Ready';
+          document.getElementById('primarySpinBtnText').textContent = 'Reveal Final Part (5 of 5)';
+          document.getElementById('primaryBtnIcon').className = 'fa-solid fa-bullseye text-sm';
+          document.getElementById('centerBtnLabel').textContent = 'REVEAL';
+          document.getElementById('centerBtnIcon').className = 'fa-solid fa-check text-[10px] ml-0.5';
+        } else {
+          document.getElementById('statusPillText').textContent = isSpinning ? 'Spinning...' : 'Awaiting Spin';
+          document.getElementById('primarySpinBtnText').textContent = `Spin for ${currentSection.part}`;
+          document.getElementById('primaryBtnIcon').className = 'fa-solid fa-arrows-rotate text-sm';
+          document.getElementById('centerBtnLabel').textContent = 'SPIN';
+          document.getElementById('centerBtnIcon').className = 'fa-solid fa-play text-[10px] ml-0.5';
+        }
       } else {
         document.getElementById('roundCounterText').textContent = 'ROSTER COMPLETE ( 5 OF 5 )';
         document.getElementById('roundTitle').textContent = 'All Parts Successfully Assigned!';
         document.getElementById('roundDesc').textContent = 'Your 5-part pitch sequence is locked in and ready for the presentation.';
         document.getElementById('statusPillText').textContent = 'Complete';
         document.getElementById('primarySpinBtnText').textContent = 'All Assigned';
+        document.getElementById('centerBtnLabel').textContent = 'DONE';
+        document.getElementById('centerBtnIcon').className = 'fa-solid fa-check text-[10px] ml-0.5';
       }
 
-      // Assigned count badge
       document.getElementById('assignedCountBadge').textContent = `${assignedCount} / 5 Assigned`;
       document.getElementById('assignedCountBadge').className = isComplete
         ? 'text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-        : 'text-xs font-bold px-3 py-1 rounded-full bg-slate-900 border border-slate-700/80 text-slate-300';
+        : 'text-xs font-bold px-3 py-1 rounded-full bg-[#111827] border border-slate-700/80 text-slate-300';
 
-      // Primary buttons state
       document.getElementById('centerSpinBtn').disabled = isSpinning || isComplete;
       document.getElementById('primarySpinBtn').disabled = isSpinning || isComplete;
       document.getElementById('autoAssignAllBtn').disabled = isSpinning || isComplete;
       document.getElementById('downloadOutcomeBtn').disabled = !isComplete;
       document.getElementById('copyRosterBtn').disabled = !isComplete;
 
-      // Render pool tags (pills below buttons)
-      const poolPillsContainer = document.getElementById('poolPillsContainer');
-      poolPillsContainer.innerHTML = '';
+      // Bottom Pool Badges Tray
+      const poolContainer = document.getElementById('poolPillsContainer');
+      poolContainer.innerHTML = '';
       if (pool.length === 0) {
-        poolPillsContainer.innerHTML = `<span class="text-xs text-slate-500 italic">No candidates remaining</span>`;
+        poolContainer.innerHTML = `<span class="text-xs text-slate-500 italic">All team members drafted</span>`;
       } else {
         pool.forEach(c => {
           const pill = document.createElement('span');
-          pill.className = 'px-3.5 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-1.5 shadow-sm transition';
+          pill.className = 'px-3 py-1 rounded-xl text-xs font-bold text-white shadow-md flex items-center gap-1.5 transition';
           pill.style.backgroundColor = c.color;
-          pill.innerHTML = `<i class="fa-solid fa-user text-[10px] opacity-80"></i> ${c.name}`;
-          poolPillsContainer.appendChild(pill);
+          pill.innerHTML = `<i class="fa-solid fa-user text-[10px] opacity-80"></i> <span>${c.name}</span>`;
+          poolContainer.appendChild(pill);
         });
       }
 
-      // Render 5 Roster Cards on Right
+      // Roster Cards on Right
       const rosterList = document.getElementById('rosterCardsList');
       rosterList.innerHTML = '';
 
@@ -518,10 +541,10 @@
         const card = document.createElement('div');
         card.className = `p-3.5 rounded-2xl border transition-all flex items-center justify-between ${
           assignedCandidate
-            ? 'bg-[#0b101d] border-slate-700/70'
+            ? 'bg-[#0a0f1d] border-slate-700/70'
             : isCurrentSpin
-              ? 'bg-[#131b2e] border-indigo-500/70 shadow-lg shadow-indigo-950/40'
-              : 'bg-[#0b0e18] border-slate-800/60 opacity-60'
+              ? 'bg-[#11192e] border-indigo-500/70 shadow-lg shadow-indigo-950/40'
+              : 'bg-[#090d18] border-slate-800/60 opacity-60'
         }`;
 
         card.innerHTML = `
@@ -551,9 +574,20 @@
       });
     }
 
-    // --- Spinning Physics Mechanism ---
-    // The pointer is positioned at 12 o'clock (TOP of the wheel)
-    // Angle coordinate: 12 o'clock corresponds to -PI/2 (or 3*PI/2)
+    // --- Spinning Physics Mechanism (Top Pointer @ 12 o'clock) ---
+    function handleMainAction() {
+      initAudio();
+      const assignedCount = Object.keys(assignments).length;
+      if (isSpinning || assignedCount >= 5) return;
+
+      if (pool.length === 1 && assignedCount === 4) {
+        revealFinalAssignment();
+        return;
+      }
+
+      spinWheel();
+    }
+
     function spinWheel() {
       const assignedCount = Object.keys(assignments).length;
       if (isSpinning || pool.length === 0 || assignedCount >= 5) return;
@@ -565,7 +599,6 @@
       const targetIndex = Math.floor(Math.random() * numSlices);
       const sliceAngle = (2 * Math.PI) / numSlices;
 
-      // Pointer is at angle 3*Math.PI / 2 (top)
       const pointerAngle = (3 * Math.PI) / 2;
       const targetCenterAngle = targetIndex * sliceAngle + sliceAngle / 2;
       const extraRounds = (5 + Math.floor(Math.random() * 2)) * (2 * Math.PI);
@@ -575,21 +608,19 @@
 
       const startAngle = rotationAngle;
       const totalDelta = desiredEndAngle - startAngle;
-      const duration = 3000;
+      const duration = 2900;
       const startTime = performance.now();
       let lastTickAngle = startAngle;
 
       function animate(time) {
         const elapsed = time - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // Cubic easing out
         const easeOut = 1 - Math.pow(1 - progress, 3);
 
         rotationAngle = startAngle + totalDelta * easeOut;
 
-        // Procedural audio tick
         if (Math.abs(rotationAngle - lastTickAngle) >= sliceAngle * 0.75) {
-          playTickSound();
+          playTick();
           lastTickAngle = rotationAngle;
         }
 
@@ -606,35 +637,45 @@
       requestAnimationFrame(animate);
     }
 
-    // --- Turn Finalization & Intermediate Popup Modal ---
     function finalizeTurn(assignedIndex) {
       const assignedCount = Object.keys(assignments).length;
       const targetSection = SECTIONS[assignedCount];
       const selectedCandidate = pool[assignedIndex];
 
-      // Record assignment & remove from active pool
       assignments[targetSection.id] = selectedCandidate;
       pool.splice(assignedIndex, 1);
 
-      playFanfareSound();
-      confetti({
-        particleCount: 60,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
+      playFanfare(false);
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
 
       drawWheel();
       updateUI();
-
-      // Show intermediate popup modal with candidate name & explanation
       openRoundModal(selectedCandidate, targetSection);
     }
 
-    // --- Round Winner Popup Logic ---
+    // Step 5: Direct reveal without spinning + triumphant arpeggio
+    function revealFinalAssignment() {
+      initAudio();
+      if (pool.length !== 1 || Object.keys(assignments).length !== 4) return;
+      const finalSection = SECTIONS[4];
+      const finalCandidate = pool[0];
+
+      assignments[finalSection.id] = finalCandidate;
+      pool = [];
+
+      playFanfare(true);
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.55 } });
+
+      drawWheel();
+      updateUI();
+      openRoundModal(finalCandidate, finalSection, true);
+    }
+
+    // --- Modal Management ---
     const roundModal = document.getElementById('roundModal');
     const roundModalCard = document.getElementById('roundModalCard');
 
-    function openRoundModal(candidate, section) {
+    function openRoundModal(candidate, section, isFinal = false) {
       document.getElementById('roundModalName').textContent = candidate.name;
       document.getElementById('roundModalPart').textContent = section.part;
       document.getElementById('roundModalTitle').textContent = section.title;
@@ -647,53 +688,28 @@
       const iconBox = document.getElementById('roundModalIcon');
       iconBox.innerHTML = `<i class="fa-solid ${section.icon}"></i>`;
 
-      const totalAssigned = Object.keys(assignments).length;
       const continueBtnText = document.getElementById('continueBtnText');
-
-      if (totalAssigned === 4 && pool.length === 1) {
-        continueBtnText.textContent = `Reveal Final Part (5 of 5)`;
-        pendingAutoAssign = true;
-      } else if (totalAssigned === 5) {
-        continueBtnText.textContent = `View Complete Roster`;
-        pendingAutoAssign = false;
+      if (isFinal) {
+        continueBtnText.textContent = 'View Complete Roster';
+      } else if (pool.length === 1) {
+        continueBtnText.textContent = 'Reveal Final Part (5 of 5)';
       } else {
-        continueBtnText.textContent = `Continue to ${SECTIONS[totalAssigned].part}`;
-        pendingAutoAssign = false;
+        const nextSec = SECTIONS[Object.keys(assignments).length];
+        continueBtnText.textContent = `Continue to ${nextSec.part}`;
       }
 
       roundModal.classList.remove('opacity-0', 'pointer-events-none');
       roundModalCard.classList.remove('scale-95');
     }
 
-    function revealFinalAssignment() {
-      if (pool.length !== 1 || Object.keys(assignments).length !== 4) return;
-      const finalSection = SECTIONS[4];
-      const finalCandidate = pool[0];
-
-      assignments[finalSection.id] = finalCandidate;
-      pool = [];
-
-      playFanfareSound();
-      confetti({
-        particleCount: 140,
-        spread: 85,
-        origin: { y: 0.55 }
-      });
-
-      drawWheel();
-      updateUI();
-      openRoundModal(finalCandidate, finalSection);
-    }
-
     function closeRoundModal() {
+      initAudio();
       roundModal.classList.add('opacity-0', 'pointer-events-none');
       roundModalCard.classList.add('scale-95');
 
       const totalAssigned = Object.keys(assignments).length;
 
-      // When continuing from Part 4: immediately reveal the 5th and final candidate without spinning
-      if (pendingAutoAssign && pool.length === 1 && totalAssigned === 4) {
-        pendingAutoAssign = false;
+      if (pool.length === 1 && totalAssigned === 4) {
         setTimeout(() => {
           revealFinalAssignment();
         }, 350);
@@ -706,8 +722,8 @@
 
     document.getElementById('continueRoundBtn').addEventListener('click', closeRoundModal);
 
-    // --- Auto Assign All Remaining Shortcut ---
     function autoAssignAll() {
+      initAudio();
       if (isSpinning || Object.keys(assignments).length >= 5) return;
       closeRoundModal();
 
@@ -721,24 +737,21 @@
 
       drawWheel();
       updateUI();
-      playFanfareSound();
+      playFanfare(true);
       openVictoryModal();
     }
 
-    // --- Reset All Functionality ---
     function resetAll() {
       pool = [...CANDIDATES];
       assignments = {};
       isSpinning = false;
       rotationAngle = 0;
-      pendingAutoAssign = false;
       closeRoundModal();
       closeVictoryModal();
       drawWheel();
       updateUI();
     }
 
-    // --- Victory Modal Management ---
     const victoryModal = document.getElementById('victoryModal');
     const victoryModalCard = document.getElementById('victoryModalCard');
 
@@ -749,13 +762,13 @@
       SECTIONS.forEach(sec => {
         const c = assignments[sec.id];
         const row = document.createElement('div');
-        row.className = 'p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs';
+        row.className = 'p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs';
         row.innerHTML = `
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-400">${sec.part}</span>
             <span class="font-semibold text-white">${sec.title}</span>
           </div>
-          <span class="px-2.5 py-1 rounded-lg font-bold text-white" style="background-color: ${c ? c.color : '#334155'}">
+          <span class="px-2.5 py-1 rounded-lg font-bold text-white shadow" style="background-color: ${c ? c.color : '#334155'}">
             ✓ ${c ? c.name : 'Unassigned'}
           </span>
         `;
@@ -765,11 +778,7 @@
       victoryModal.classList.remove('opacity-0', 'pointer-events-none');
       victoryModalCard.classList.remove('scale-95');
 
-      confetti({
-        particleCount: 160,
-        spread: 90,
-        origin: { y: 0.5 }
-      });
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.5 } });
     }
 
     function closeVictoryModal() {
@@ -777,19 +786,17 @@
       victoryModalCard.classList.add('scale-95');
     }
 
-    // --- High-Resolution 1200x960 Vector Image Generator (Offscreen Canvas) ---
+    // --- Vector 1200x960 Image Generator ---
     function generateOutcomeImage() {
       const expCanvas = document.getElementById('exportCanvas');
       const eCtx = expCanvas.getContext('2d');
       const w = expCanvas.width;
       const h = expCanvas.height;
 
-      // Deep dark background
-      eCtx.fillStyle = '#07090e';
+      eCtx.fillStyle = '#080c16';
       eCtx.fillRect(0, 0, w, h);
 
-      // Primary Card container
-      eCtx.fillStyle = '#0f1422';
+      eCtx.fillStyle = '#0e1424';
       eCtx.beginPath();
       eCtx.roundRect(50, 50, w - 100, h - 100, 24);
       eCtx.fill();
@@ -797,12 +804,10 @@
       eCtx.lineWidth = 2.5;
       eCtx.stroke();
 
-      // Top logo badge
       eCtx.fillStyle = '#6366f1';
       eCtx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
       eCtx.fillText('OFFICIAL DRAW RESULT', 100, 115);
 
-      // Main Header
       eCtx.fillStyle = '#ffffff';
       eCtx.font = 'bold 38px "Plus Jakarta Sans", sans-serif';
       eCtx.fillText('Presentation Roster', 100, 165);
@@ -811,7 +816,6 @@
       eCtx.font = '20px "Plus Jakarta Sans", sans-serif';
       eCtx.fillText('5-Part Structured Delivery Flow', 100, 202);
 
-      // Status Badge (Top right)
       eCtx.fillStyle = '#10b98120';
       eCtx.beginPath();
       eCtx.roundRect(w - 320, 130, 220, 50, 25);
@@ -826,7 +830,6 @@
       eCtx.fillText('✓ 5 / 5 Assigned', w - 210, 162);
       eCtx.textAlign = 'left';
 
-      // 5 Rows
       const rowStartY = 245;
       const rowHeight = 110;
       const rowGap = 16;
@@ -835,8 +838,7 @@
         const y = rowStartY + i * (rowHeight + rowGap);
         const assigned = assignments[sec.id] || { name: 'Unassigned', color: '#64748b' };
 
-        // Row background
-        eCtx.fillStyle = '#090d16';
+        eCtx.fillStyle = '#080d1a';
         eCtx.beginPath();
         eCtx.roundRect(100, y, w - 200, rowHeight, 18);
         eCtx.fill();
@@ -844,7 +846,6 @@
         eCtx.lineWidth = 1.5;
         eCtx.stroke();
 
-        // Icon Box
         eCtx.fillStyle = '#1e293b';
         eCtx.beginPath();
         eCtx.roundRect(125, y + 20, 70, 70, 14);
@@ -856,7 +857,6 @@
         eCtx.textBaseline = 'middle';
         eCtx.fillText(`P${i + 1}`, 160, y + 55);
 
-        // Section details
         eCtx.textAlign = 'left';
         eCtx.textBaseline = 'alphabetic';
         eCtx.fillStyle = '#94a3b8';
@@ -867,7 +867,6 @@
         eCtx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
         eCtx.fillText(sec.title, 220, y + 80);
 
-        // Assignee badge pill
         const badgeW = 230;
         const badgeH = 54;
         const badgeX = w - 100 - badgeW - 25;
@@ -886,21 +885,18 @@
         eCtx.textAlign = 'left';
       });
 
-      // Footer
       eCtx.fillStyle = '#64748b';
       eCtx.font = '16px "Plus Jakarta Sans", sans-serif';
       eCtx.textBaseline = 'alphabetic';
       const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
       eCtx.fillText(`Generated on ${dateStr} • Presentation Randomizer Wheel`, 100, h - 85);
 
-      // Trigger automatic PNG download
       const link = document.createElement('a');
       link.download = `presentation_roster_${new Date().toISOString().slice(0, 10)}.png`;
       link.href = expCanvas.toDataURL('image/png');
       link.click();
     }
 
-    // --- Clipboard Export Helper ---
     function copyRosterToClipboard(buttonId, textId) {
       const lines = SECTIONS.map(s => {
         const cand = assignments[s.id];
@@ -923,8 +919,8 @@
       }, 2000);
     }
 
-    // --- Sound Toggle ---
     document.getElementById('soundToggleBtn').addEventListener('click', () => {
+      initAudio();
       soundEnabled = !soundEnabled;
       const icon = document.getElementById('soundIcon');
       const label = document.getElementById('soundLabel');
@@ -937,9 +933,8 @@
       }
     });
 
-    // --- Event Listeners ---
-    document.getElementById('centerSpinBtn').addEventListener('click', spinWheel);
-    document.getElementById('primarySpinBtn').addEventListener('click', spinWheel);
+    document.getElementById('centerSpinBtn').addEventListener('click', handleMainAction);
+    document.getElementById('primarySpinBtn').addEventListener('click', handleMainAction);
     document.getElementById('autoAssignAllBtn').addEventListener('click', autoAssignAll);
     document.getElementById('resetAllBtn').addEventListener('click', resetAll);
 
@@ -954,19 +949,17 @@
       if (e.target === victoryModal) closeVictoryModal();
     });
 
-    // --- Initialization ---
-    function initializeApp() {
-      updateUI();
+    function initialize() {
       drawWheel();
+      updateUI();
     }
 
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(initializeApp);
+      document.fonts.ready.then(initialize);
     } else {
-      window.addEventListener('load', initializeApp);
+      window.addEventListener('load', initialize);
     }
-    // Fallback immediate render
-    initializeApp();
+    initialize();
   </script>
 </body>
 </html>
